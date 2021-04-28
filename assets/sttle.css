@@ -1,0 +1,49 @@
+.jumbotron {
+  background-color: rgb(31, 31, 31);
+  color: antiquewhite;
+}
+
+.list-group {
+  width: 400px;
+  padding: 1.5rem;
+  display: inline-block;
+}
+
+.city-list {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.infowrap {
+  display: flex;
+}
+.card {
+  width: 100%;
+  margin: 40px;
+  height: 250px;
+}
+
+@media (max-width: 576px) {
+  .infowrap {
+    flex-direction: column;
+    margin-right: 0;
+    margin-left: 0;
+    border-width: 1px;
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .list-group {
+    width: 100%;
+    padding: 15px;
+  }
+}
+@media (max-width: 576px) {
+  .card {
+    width: 95%;
+    margin: 10px;
+  }
+}
