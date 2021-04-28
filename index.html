@@ -25,7 +25,7 @@
         <div class="list-group">
             <!--         Search  Button              -->
             <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="City name" aria-label="City name"
+                <input type="text" class="form-control" id="search-input" placeholder="City name" aria-label="City name"
                     aria-describedby="button-addon2">
                 <button class="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
             </div>
@@ -49,7 +49,14 @@
 
         <div class="card">
             <div class="card-body">
-                <h1>Weather</h1>
+                <ul id="hero-weather-list">
+                    <li class="hero-weather-city"></li>
+                    <li class="hero-weather-temp">Temperature: </li>
+                    <li class="hero-weather-humidity">Humidity: </li>
+                    <li class="hero-weather-wind">Wind Speed: </li>
+                    <li class="hero-weather-pressure">Pressure: </li>
+                </ul>
+
             </div>
         </div>
     </div>

@@ -23,7 +23,7 @@
   height: 250px;
 }
 
-@media (max-width: 576px) {
+@media (max-width: 860px) {
   .infowrap {
     flex-direction: column;
     margin-right: 0;
@@ -35,13 +35,18 @@
   }
 }
 
-@media (max-width: 576px) {
+#hero-weather-list {
+  list-style: none;
+  font-size: 1.7em;
+}
+
+@media (max-width: 860px) {
   .list-group {
     width: 100%;
     padding: 15px;
   }
 }
-@media (max-width: 576px) {
+@media (max-width: 860px) {
   .card {
     width: 95%;
     margin: 10px;
