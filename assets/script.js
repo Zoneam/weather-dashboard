@@ -1,13 +1,33 @@
 let searchButton = $("#button-addon2");
 let searchInput = $("#search-input");
+let listUl = $("ul");
 let heroWeatherUV;
+let storedCities = [];
+
+//--------------- get from local storage
+function getStoredCities() {
+    storedCities = JSON.parse(localStorage.getItem("Recent Cities"))
+        if (storedCities !== null) {
+            renderCities();
+        } else {
+            storedCities = [];
+        }
+}
+
+//--------------- render Cities
+function renderCities() {
+    if ($(".list-group-item").length){
+        $(".list-group-item").remove()
+    }
+    storedCities.forEach(element => {
+        $("<li>").addClass("list-group-item").text(element).appendTo(listUl);
+    });
+}
 
 //------------- Click Event
 searchButton.on("click", function(event){
     event.preventDefault();
-     let apiLink = `https://api.openweathermap.org/data/2.5/weather?q=${ searchInput.val() }&units=imperial&appid=95d58ea334ba866f1b56ccbf029ea497`
-    
-    
+    let apiLink = `https://api.openweathermap.org/data/2.5/weather?q=${ searchInput.val() }&units=imperial&appid=95d58ea334ba866f1b56ccbf029ea497`
      fetch(apiLink).then(function(response){
         if (response.status == 200) {
             response.json().then(function (data) {
@@ -17,19 +37,24 @@ searchButton.on("click", function(event){
             fetch(uvApi).then(function(response){
             if (response.status == 200) {
                 response.json().then(function (dataUv) {
-                    console.log("second",dataUv)
+                    console.log("second",dataUv);
                     heroWeatherUV = dataUv.current.uvi;
-                    console.log("heroWeatherUV",heroWeatherUV)
+                    console.log("heroWeatherUV",heroWeatherUV);
                     fiveDayForecastDisplay(dataUv);
+                    storedCities.unshift(searchInput.val().trim());
+                    localStorage.setItem("Recent Cities", JSON.stringify(storedCities));
+                    console.log("storedCities click", storedCities);
+                    renderCities();
                     displayInfo(data);
                 })
             }
             })
             .catch(function(){
-             console.log("Bad Request")
+             console.log("Bad Request");
         })
             })
         } else {
+            searchInput.val("");
             alert("Please enter valid city name")
         }
     })
@@ -78,8 +103,8 @@ function fiveDayForecastDisplay(fiveDayData){
 // ----------------------- Display Info for Today
 
 function displayInfo(rawData) {
-    searchInput.val("")
-    console.log(rawData)
+    searchInput.val("");
+    console.log(rawData);
 
     if($(".rightInfoCard").length){
         $(".rightInfoCard").empty();
@@ -100,3 +125,5 @@ function displayInfo(rawData) {
                     $("<li>").addClass("hero-weather-uv").text("UV Index: " + heroWeatherUV).appendTo(rightCardUl);
     
 }
+
+getStoredCities();
