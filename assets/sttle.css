@@ -16,11 +16,32 @@
 
 .infowrap {
   display: flex;
+  background-color: cadetblue;
 }
 .card {
   width: 100%;
   margin: 40px;
   height: 250px;
+}
+
+.hero-weather-city {
+  color: aquamarine;
+}
+.list-group-item,
+.btn {
+  background-color: rgb(149, 242, 245);
+}
+
+.main-card {
+  background-color: rgb(70, 99, 99);
+  color: antiquewhite;
+  text-shadow: 2px 1px 4px #000000;
+}
+
+.container-bottom {
+  color: rgb(255, 255, 255);
+  font-weight: 700;
+  text-shadow: 2px 1px 4px #000000;
 }
 
 @media (max-width: 860px) {
