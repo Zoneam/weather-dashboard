@@ -11,6 +11,7 @@ searchButton.on("click", function(event){
      fetch(apiLink).then(function(response){
         if (response.status == 200) {
             response.json().then(function (data) {
+
 //////-------------------- Second Fetch  
             let uvApi = `https://api.openweathermap.org/data/2.5/onecall?lat=${ data.coord.lat }&lon=${ data.coord.lon }&units=imperial&appid=95d58ea334ba866f1b56ccbf029ea497`
             fetch(uvApi).then(function(response){
@@ -37,8 +38,9 @@ searchButton.on("click", function(event){
     })
 })
 
+// ----------------------- Display Info for next 5 days
 function fiveDayForecastDisplay(fiveDayData){
-    let fiveDayForecast = [[],[],[],[]];
+    let fiveDayForecast = [[],[],[],[],[]];
     console.log("Five Day Data", fiveDayData)
     let nextDay = new Date();
     if ($(".div-wrapper").length){
@@ -48,41 +50,44 @@ function fiveDayForecastDisplay(fiveDayData){
 
     let divWrapper = $("<div>").addClass("div-wrapper").appendTo(document.body);
     $("<h2>").text("5 Day Forecast").appendTo(divWrapper);
-    let cardDiv = $("<div>").addClass("container container-bottom").appendTo(divWrapper);
+    let cardDiv = $("<div>").addClass("container-bottom").appendTo(divWrapper);
     let cardGroup = $("<div>").addClass("card-group").appendTo(cardDiv);
-
-    for (i=0; i<5; i++){
-        nextDay.setDate(nextDay.getDate() + 1);
-        fiveDayForecast[0].push(nextDay.toLocaleDateString());
-        fiveDayForecast[1].push(fiveDayData.daily[i].temp.day);
-        fiveDayForecast[2].push(fiveDayData.daily[i].humidity);
-        fiveDayForecast[3].push(fiveDayData.daily[i].weather[0].icon);
    
+    for (i=0; i<fiveDayForecast.length; i++){
+    
+        nextDay.setDate(nextDay.getDate() + 1);
+        fiveDayForecast[i].push(nextDay.toLocaleDateString());
+        fiveDayForecast[i].push(fiveDayData.daily[i].weather[0].icon);
+        fiveDayForecast[i].push(fiveDayData.daily[i].temp.day);
+        fiveDayForecast[i].push(fiveDayData.daily[i].humidity);
+        
     console.log("fiveDayData.daily", fiveDayForecast)
+      
 }
 
-    for (i=0; i < fiveDayForecast[0].length;i++){
-            var cardBgPrimary = $("<div>").addClass("card bg-primary").appendTo(cardGroup);
-            var cardBody = $("<div>").addClass("card-body text-center").appendTo(cardBgPrimary);
-            $("<p>").addClass("card-text").text(fiveDayForecast[0][i]).appendTo(cardBody);
-            $("<img>").attr("src", "http://openweathermap.org/img/wn/" + fiveDayForecast[3][i] + '.png').appendTo(cardBody);
-            $("<span>").text("Temperature: " + fiveDayForecast[1][i]).appendTo(cardBody);
-            $("<p>").text("Humidity: " + fiveDayForecast[2][i]).appendTo(cardBody);
+    for (i=0; i < fiveDayForecast.length;i++){
+            var cardBgPrimary = $("<div>").addClass("myspdiv").appendTo(cardGroup);
+            var cardBody = $("<div>").addClass("card-body-div text-center").appendTo(cardBgPrimary);
+            $("<p>").addClass("card-text").text(fiveDayForecast[i][0]).appendTo(cardBody);
+            $("<img>").attr("src", "http://openweathermap.org/img/wn/" + fiveDayForecast[i][1] + '.png').appendTo(cardBody);
+            $("<p>").text("Temperature: " + fiveDayForecast[i][2] + ' \u00B0' + "F").appendTo(cardBody);
+            $("<p>").text("Humidity: " + fiveDayForecast[i][3]).appendTo(cardBody);
         }
 }
 
-// ----------------------- Display Info
+// ----------------------- Display Info for Today
 
 function displayInfo(rawData) {
     searchInput.val("")
+    console.log(rawData)
 
-    if($(".myCard").length){
-        $(".myCard").empty();
-        $(".myCard").remove();
+    if($(".rightInfoCard").length){
+        $(".rightInfoCard").empty();
+        $(".rightInfoCard").remove();
     }
     
     let heroWeatherIcon = "http://openweathermap.org/img/wn/" + rawData.weather[0].icon + '.png';
-    let rightCardDiv = $("<div>").addClass("card myCard").appendTo($(".infowrap"));
+    let rightCardDiv = $("<div>").addClass("rightInfoCard").appendTo($(".infowrap"));
     let rightCardDivChild = $("<div>").addClass("card-body main-card").appendTo(rightCardDiv);
     let rightCardUl = $("<ul>").addClass("hero-weather-list").appendTo(rightCardDivChild);
           let  iconLi =   $("<li>").addClass("hero-weather-city")
@@ -93,7 +98,5 @@ function displayInfo(rawData) {
                     $("<li>").addClass("hero-weather-humidity").text("Humidity: " + rawData.main.humidity).appendTo(rightCardUl);
                     $("<li>").addClass("hero-weather-wind").text("Wind Speed: " + rawData.wind.speed + " mph").appendTo(rightCardUl);
                     $("<li>").addClass("hero-weather-uv").text("UV Index: " + heroWeatherUV).appendTo(rightCardUl);
-
-                
-    console.log(rawData)
+    
 }

@@ -18,10 +18,14 @@
   display: flex;
   background-color: cadetblue;
 }
-.card {
+.bg-primary {
   width: 100%;
   margin: 40px;
   height: 250px;
+}
+.rightInfoCard {
+  position: relative;
+  left: 35px;
 }
 
 .hero-weather-city {
@@ -36,6 +40,8 @@
   background-color: rgb(70, 99, 99);
   color: antiquewhite;
   text-shadow: 2px 1px 4px #000000;
+  margin: 20px;
+  /* padding: 30px; */
 }
 
 .container-bottom {
@@ -55,10 +61,23 @@
     width: 100%;
   }
 }
+.myspdiv {
+  margin: 15px;
+  width: 200px;
+}
 
-#hero-weather-list {
+.hero-weather-list {
   list-style: none;
+  white-space: nowrap;
   font-size: 1.7em;
+}
+p {
+  white-space: nowrap;
+}
+
+.card-body-div {
+  background-color: rgb(42, 95, 165);
+  padding: 8px;
 }
 
 @media (max-width: 860px) {
@@ -70,6 +89,32 @@
 @media (max-width: 860px) {
   .card {
     width: 95%;
+
     margin: 10px;
+    height: fit-content;
+  }
+}
+
+@media (max-width: 860px) {
+  .card-body,
+  .hero-weather-list {
+    margin: 0px;
+    padding: 15px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 860px) {
+  .rightInfoCard {
+    position: relative;
+    left: 0px;
+  }
+}
+
+@media (max-width: 860px) {
+  .myspdiv {
+    width: 100%;
+    margin: 0px;
+    margin-top: 10px;
   }
 }
