@@ -1,9 +1,10 @@
 let searchButton = $("#button-addon2");
 let searchInput = $("#search-input");
-let listUl = $("ul");
+let listUl = $(".city-list");
+let cityList = $(".list-group-item");
 let heroWeatherUV;
 let storedCities = [];
-
+let searchCity;
 //--------------- get from local storage
 function getStoredCities() {
     storedCities = JSON.parse(localStorage.getItem("Recent Cities"))
@@ -24,44 +25,62 @@ function renderCities() {
     });
 }
 
+$(".city-list").on("click", "li" , function(event){
+    event.preventDefault();
+    console.log($(this).text())
+    searchCity = $(this).text();
+    fetchApis();
+})
+
 //------------- Click Event
 searchButton.on("click", function(event){
     event.preventDefault();
-    let apiLink = `https://api.openweathermap.org/data/2.5/weather?q=${ searchInput.val() }&units=imperial&appid=95d58ea334ba866f1b56ccbf029ea497`
-     fetch(apiLink).then(function(response){
-        if (response.status == 200) {
-            response.json().then(function (data) {
+    searchCity = searchInput.val()
+    fetchApis();
+})
 
-//////-------------------- Second Fetch  
-            let uvApi = `https://api.openweathermap.org/data/2.5/onecall?lat=${ data.coord.lat }&lon=${ data.coord.lon }&units=imperial&appid=95d58ea334ba866f1b56ccbf029ea497`
-            fetch(uvApi).then(function(response){
-            if (response.status == 200) {
-                response.json().then(function (dataUv) {
-                    console.log("second",dataUv);
-                    heroWeatherUV = dataUv.current.uvi;
-                    console.log("heroWeatherUV",heroWeatherUV);
-                    fiveDayForecastDisplay(dataUv);
-                    storedCities.unshift(searchInput.val().trim());
+// ------------- fetch APIs
+function fetchApis(){
+
+    let apiLink = `https://api.openweathermap.org/data/2.5/weather?q=${ searchCity }&units=imperial&appid=95d58ea334ba866f1b56ccbf029ea497`
+    fetch(apiLink).then(function(response){
+       if (response.status == 200) {
+           response.json().then(function (data) {
+//-------------------- Second Fetch  
+           let uvApi = `https://api.openweathermap.org/data/2.5/onecall?lat=${ data.coord.lat }&lon=${ data.coord.lon }&units=imperial&appid=95d58ea334ba866f1b56ccbf029ea497`
+           fetch(uvApi).then(function(response){
+           if (response.status == 200) {
+               response.json().then(function (dataUv) {
+                   console.log("second",dataUv);
+                   heroWeatherUV = dataUv.current.uvi;
+                   console.log("heroWeatherUV",heroWeatherUV);
+                   fiveDayForecastDisplay(dataUv);
+                    if  (!storedCities.includes(searchCity.trim())){
+                            storedCities.unshift(searchCity.trim());
+                        }
+                    if (storedCities.length >= 6){
+                            storedCities.splice(6);
+                        }
                     localStorage.setItem("Recent Cities", JSON.stringify(storedCities));
                     console.log("storedCities click", storedCities);
                     renderCities();
                     displayInfo(data);
-                })
-            }
-            })
-            .catch(function(){
-             console.log("Bad Request");
-        })
-            })
-        } else {
-            searchInput.val("");
-            alert("Please enter valid city name")
-        }
-    })
-    .catch(function(){
-        console.log("Bad Request")
-    })
-})
+               })
+           }
+           })
+           .catch(function(){
+            console.log("Bad Request");
+       })
+           })
+       } else {
+           searchInput.val("");
+           alert("Please enter valid city name")
+       }
+   })
+   .catch(function(){
+       console.log("Bad Request")
+   })
+}
 
 // ----------------------- Display Info for next 5 days
 function fiveDayForecastDisplay(fiveDayData){
@@ -79,17 +98,12 @@ function fiveDayForecastDisplay(fiveDayData){
     let cardGroup = $("<div>").addClass("card-group").appendTo(cardDiv);
    
     for (i=0; i<fiveDayForecast.length; i++){
-    
-        nextDay.setDate(nextDay.getDate() + 1);
-        fiveDayForecast[i].push(nextDay.toLocaleDateString());
-        fiveDayForecast[i].push(fiveDayData.daily[i].weather[0].icon);
-        fiveDayForecast[i].push(fiveDayData.daily[i].temp.day);
-        fiveDayForecast[i].push(fiveDayData.daily[i].humidity);
-        
-    console.log("fiveDayData.daily", fiveDayForecast)
-      
-}
-
+            nextDay.setDate(nextDay.getDate() + 1);
+            fiveDayForecast[i].push(nextDay.toLocaleDateString());
+            fiveDayForecast[i].push(fiveDayData.daily[i].weather[0].icon);
+            fiveDayForecast[i].push(fiveDayData.daily[i].temp.day);
+            fiveDayForecast[i].push(fiveDayData.daily[i].humidity);      
+    }
     for (i=0; i < fiveDayForecast.length;i++){
             var cardBgPrimary = $("<div>").addClass("myspdiv").appendTo(cardGroup);
             var cardBody = $("<div>").addClass("card-body-div text-center").appendTo(cardBgPrimary);
@@ -123,7 +137,6 @@ function displayInfo(rawData) {
                     $("<li>").addClass("hero-weather-humidity").text("Humidity: " + rawData.main.humidity).appendTo(rightCardUl);
                     $("<li>").addClass("hero-weather-wind").text("Wind Speed: " + rawData.wind.speed + " mph").appendTo(rightCardUl);
                     $("<li>").addClass("hero-weather-uv").text("UV Index: " + heroWeatherUV).appendTo(rightCardUl);
-    
 }
 
 getStoredCities();

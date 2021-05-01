@@ -36,6 +36,10 @@
   background-color: rgb(149, 242, 245);
 }
 
+.list-group-item:hover {
+  cursor: pointer;
+}
+
 .main-card {
   background-color: rgb(70, 99, 99);
   color: antiquewhite;
