@@ -27,7 +27,6 @@ function renderCities() {
 
 $(".city-list").on("click", "li" , function(event){
     event.preventDefault();
-    console.log($(this).text())
     searchCity = $(this).text();
     fetchApis();
 })
@@ -41,7 +40,6 @@ searchButton.on("click", function(event){
 
 // ------------- fetch APIs
 function fetchApis(){
-
     let apiLink = `https://api.openweathermap.org/data/2.5/weather?q=${ searchCity }&units=imperial&appid=95d58ea334ba866f1b56ccbf029ea497`
     fetch(apiLink).then(function(response){
        if (response.status == 200) {
@@ -115,7 +113,6 @@ function fiveDayForecastDisplay(fiveDayData){
 }
 
 // ----------------------- Display Info for Today
-
 function displayInfo(rawData) {
     searchInput.val("");
     console.log(rawData);
@@ -138,5 +135,8 @@ function displayInfo(rawData) {
                     $("<li>").addClass("hero-weather-wind").text("Wind Speed: " + rawData.wind.speed + " mph").appendTo(rightCardUl);
                     $("<li>").addClass("hero-weather-uv").text("UV Index: " + heroWeatherUV).appendTo(rightCardUl);
 }
-
 getStoredCities();
+// ---------- displays last searched city 
+if (storedCities.length){
+    fetchApis(searchCity=$( "li" ).first().text())
+}
