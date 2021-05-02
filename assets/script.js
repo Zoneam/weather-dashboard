@@ -24,7 +24,7 @@ function renderCities() {
         $("<li>").addClass("list-group-item").text(element).appendTo(listUl);
     });
 }
-
+//-------------- City list click search
 $(".city-list").on("click", "li" , function(event){
     event.preventDefault();
     searchCity = $(this).text();
@@ -51,7 +51,7 @@ function fetchApis(){
                response.json().then( function (dataUv) {
                    heroWeatherUV = dataUv.current.uvi;
                    fiveDayForecastDisplay(dataUv);
-                   //checking if our city name already exists in history -- rearrangin city names when clicked
+                   //checking if our city name already exists in history -- rearanging city names when clicked
                 if  ( !storedCities.includes( searchCity.trim() ) ) {
                         storedCities.unshift( searchCity.trim() );
                 } else {
@@ -113,8 +113,10 @@ function fiveDayForecastDisplay( fiveDayData ) {
             $("<p>").text("Temperature: " + fiveDayForecast[i][2] + ' \u00B0' + "F").addClass("temp-ptag").appendTo(cardBody);
             $("<p>").text("Humidity: " + fiveDayForecast[i][3]).appendTo(cardBody);
         } 
+        // ------adding click listener for F to C conversion
         addClickListener(fiveDayForecast)
 }
+
 // ----------------------- Display Info for Today
 function displayInfo(rawData) {
     searchInput.val("");
@@ -126,14 +128,21 @@ function displayInfo(rawData) {
     let rightCardDiv = $("<div>").addClass("rightInfoCard").appendTo($(".infowrap"));
     let rightCardDivChild = $("<div>").addClass("card-body main-card").appendTo(rightCardDiv);
     let rightCardUl = $("<ul>").addClass("hero-weather-list").appendTo(rightCardDivChild);
-          let  iconLi =   $("<li>").addClass("hero-weather-city")
-          .text(rawData.name + " (" + rawData.sys.country + ")" + ": " + "( " + new Date().toLocaleDateString() + " ) " + " - " + rawData.weather[0].description)
-          .appendTo(rightCardUl);
+                    $("<li>").addClass("hero-weather-city")
+                    .text(rawData.name + " (" + rawData.sys.country + ")" + ": " + "( " + new Date().toLocaleDateString() + " ) ")
+                    .appendTo(rightCardUl);
+    let  iconLi =  $("<li>").addClass("hero-weather-temp").text(rawData.weather[0].description+ " - ").appendTo(rightCardUl);
                     $("<img>").addClass("current-weather-image").attr("src", heroWeatherIcon).appendTo(iconLi);
                     $("<li>").addClass("hero-weather-temp").text("Temperature: " +  rawData.main.temp + ' \u00B0' + "F").appendTo(rightCardUl);
                     $("<li>").addClass("hero-weather-humidity").text("Humidity: " + rawData.main.humidity).appendTo(rightCardUl);
                     $("<li>").addClass("hero-weather-wind").text("Wind Speed: " + rawData.wind.speed + " mph").appendTo(rightCardUl);
-                    $("<li>").addClass("hero-weather-uv").text("UV Index: " + heroWeatherUV).appendTo(rightCardUl);
+                    if (heroWeatherUV >= 0 && heroWeatherUV <= 1){
+                    $("<li>").addClass("hero-weather-uv green-uv").text("UV Index: " + heroWeatherUV).appendTo(rightCardUl);
+                    } else if (heroWeatherUV >1 && heroWeatherUV<=2){
+                        $("<li>").addClass("hero-weather-uv yellow-uv").text("UV Index: " + heroWeatherUV).appendTo(rightCardUl);
+                    } else if (heroWeatherUV >2) {
+                        $("<li>").addClass("hero-weather-uv red-uv").text("UV Index: " + heroWeatherUV).appendTo(rightCardUl);
+                    }
 }
 
 //-------------on click F to C conversion
