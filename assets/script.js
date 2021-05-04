@@ -163,7 +163,9 @@ function addClickListener(fiveDayForecast){
          } else {
              $(".temp-ptag").each( function(){
                  $(this).text("Temperature: " + fiveDayForecast[y][2] + ' \u00B0' + "F");
+                 console.log(fiveDayForecast)
                  fahrenheit = true;
+                 y++;
              })
             }
         })
